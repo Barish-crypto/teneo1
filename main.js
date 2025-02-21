@@ -29,7 +29,6 @@ function getProxyAgent(proxyUrl) {
   try {
     return proxyUrl.toLowerCase().startsWith("socks") ? new SocksProxyAgent(proxyUrl) : new HttpsProxyAgent(proxyUrl);
   } catch (error) {
-    console.log(`Failed to create proxy ${proxyUrl}: ${error.message}`.yellow);
     return null;
   }
 }
@@ -39,7 +38,6 @@ async function readFile(filePath) {
     const data = await fs.readFile(filePath, "utf-8");
     return data.split("\n").map((line) => line.trim()).filter((line) => line);
   } catch (error) {
-    console.error("Error reading file:", error.message);
     return [];
   }
 }
@@ -81,13 +79,11 @@ class WebSocketClient {
     };
 
     this.socket.onclose = () => {
-      this.log("WebSocket disconnected", "warning");
       this.stopPinging();
       this.reconnect();
     };
 
     this.socket.onerror = (error) => {
-      this.log(`WebSocket error: ${error.message}`, "error");
     };
   }
 
@@ -182,7 +178,6 @@ async function main() {
       }));
 
       process.on("SIGINT", () => {
-        console.log("Exiting... Disconnecting all WebSockets.".yellow);
         wsClients.forEach(client => client?.disconnect());
         process.exit(0);
       });
