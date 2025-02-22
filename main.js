@@ -89,7 +89,6 @@ class WebSocketClient {
 
   reconnect() {
     const delay = Math.min(1000 * 2 ** this.reconnectAttempts, 30000);
-    this.log(`Reconnecting in ${delay / 1000} seconds...`, "warning");
     setTimeout(() => {
       this.reconnectAttempts++;
       this.connect();
